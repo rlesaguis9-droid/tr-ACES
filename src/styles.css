@@ -123,6 +123,9 @@ input:focus, select:focus { outline: 2px solid var(--primary); outline-offset: -
 .span-all { grid-column: 1 / -1; }
 .span-2 { grid-column: span 2; }
 .filters { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 1rem; }
+/* Let filter columns shrink below a date input's built-in width so nothing spills out on phones */
+.filters > * { min-width: 0; }
+.filters input, .filters select { min-width: 0; max-width: 100%; }
 .net-preview { display: grid; padding: .5rem 0; }
 .net-preview strong { font-size: 1.25rem; font-variant-numeric: tabular-nums; }
 
