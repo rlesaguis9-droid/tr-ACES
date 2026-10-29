@@ -40,7 +40,7 @@ export default function Auth() {
             <input
               type={showPassword ? 'text' : 'password'}
               required
-              minLength={6}
+              minLength={mode === 'signup' ? 10 : undefined} /* sign-in must still accept older, shorter passwords */
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               autoComplete={mode === 'signin' ? 'current-password' : 'new-password'}

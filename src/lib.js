@@ -64,7 +64,14 @@ export const round2 = (n) => Math.round(n * 100) / 100
 export function downloadCsv(filename, rows) {
   if (!rows.length) return
   const headers = Object.keys(rows[0])
-  const esc = (v) => `"${String(v ?? '').replace(/"/g, '""')}"`
+  // A cell starting with = + - @ (or a tab/CR) is run as a formula by Excel and Sheets, so a
+  // name like =HYPERLINK(...) could phone home when an export is opened. A leading ' stops it.
+  // Plain numbers, including negative amounts, are left alone: they can't be a formula.
+  const safe = (v) => {
+    const t = String(v ?? '')
+    return /^[=+\-@\t\r]/.test(t) && !/^-?\d+(\.\d+)?$/.test(t) ? `'${t}` : t
+  }
+  const esc = (v) => `"${safe(v).replace(/"/g, '""')}"`
   const csv = [headers.join(','), ...rows.map((r) => headers.map((h) => esc(r[h])).join(','))].join('\n')
   const a = document.createElement('a')
   a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }))
